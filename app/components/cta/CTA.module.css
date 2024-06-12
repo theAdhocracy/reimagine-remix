@@ -1,0 +1,48 @@
+.cta {
+	--border-color: var(--c-border);
+	--bg-color: transparent;
+	--text-color: var(--c-text);
+	--active-bg-color: var(--c-bg-page);
+	--lighten: 10%;
+
+	display: inline-block;
+	width: max-content;
+	height: fit-content;
+	padding: 0.5rem 1.5rem;
+	border: 1px solid var(--border-color);
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	text-decoration: none;
+	font-size: 0.9375rem;
+	line-height: 2.4;
+	cursor: pointer;
+	text-align: center;
+	white-space: nowrap;
+
+	&:hover,
+	&:focus-visible {
+		background-color: color-mix(
+			in srgb,
+			var(--active-bg-color),
+			white var(--lighten)
+		);
+	}
+}
+
+.cta[data-cta-type="highlight"] {
+	--border-color: var(--c-highlight);
+	--bg-color: var(--c-highlight);
+	--text-color: var(--c-text-invert);
+	--active-bg-color: var(--c-highlight);
+	--lighten: 50%;
+}
+
+.cta[data-cta-type="inverted"] {
+	--border-color: var(--c-text-invert);
+	--bg-color: var(--c-text-invert);
+	--active-bg-color: var(--c-text-invert);
+
+	&:focus-visible {
+		outline-color: var(--c-text-invert);
+	}
+}
