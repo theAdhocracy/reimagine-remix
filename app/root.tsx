@@ -22,6 +22,8 @@ import Image from "~/components/image/Image";
 
 import reset from "~/styles/reset.css?url";
 import theme from "~/styles/theme.css?url";
+import Modal from "~/components/modal/Modal";
+import React from "react";
 
 export const loader = async () => {
 	const { data } = await loadQuery<SanityDocument[]>(
@@ -40,6 +42,9 @@ export const loader = async () => {
 export function Layout({ children }: { children: React.ReactNode }) {
 	const { data, ENV } = useLoaderData<typeof loader>();
 	const global = data?.[0];
+
+	// Modal
+	const [open, setOpen] = React.useState(false);
 
 	return (
 		<html lang="en">
@@ -63,15 +68,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
 					<a href="/search" aria-label="Search">
 						<SearchIcon />
 					</a>
-					<button id="globalMenuButton" type="button">
+					<button
+						id="globalMenuButton"
+						type="button"
+						onClick={() => setOpen(true)}>
 						Menu
 					</button>
 
-					<dialog id="globalMenuModal">
+					<Modal isOpen={open} onClose={() => setOpen(false)}>
 						<header>
 							<Logo fill="var(--c-text-invert)" />
 							<form method="dialog">
-								<button type="submit">Close</button>
+								<button type="submit" onClick={() => setOpen(false)}>
+									Close
+								</button>
 							</form>
 						</header>
 						<p>For testing purposes only.</p>
@@ -82,7 +92,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 								<li>Contact</li>
 							</ul>
 						</nav>
-					</dialog>
+					</Modal>
 				</header>
 				{children}
 				<footer className="global-footer">
