@@ -63,14 +63,19 @@ export default function Index() {
 					/>
 				))}
 			</section>
-			{homepage.content?.map((block: any) => {
+			{homepage.content?.map((block: any, index: number) => {
 				switch (block._type) {
 					case "revelation_grid":
-						return <GridRevelation {...block} />;
+						return (
+							<GridRevelation
+								{...block}
+								key={`block-grid-revelation-${index}`}
+							/>
+						);
 					case "logo_grid":
-						return <GridLogo {...block} />;
+						return <GridLogo {...block} key={`block-grid-logo-${index}`} />;
 					case "banner":
-						return <Banner {...block} />;
+						return <Banner {...block} key={`block-banner-${index}`} />;
 					default:
 						return <p>Unknown Component</p>;
 				}

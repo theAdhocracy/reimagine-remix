@@ -2,9 +2,12 @@
 import groq from "groq";
 import { loadQuery } from "~/sanity/loader.server";
 import {
+	Form,
+	json,
 	Links,
 	Meta,
 	Outlet,
+	redirect,
 	Scripts,
 	ScrollRestoration,
 	useLoaderData,
@@ -25,12 +28,18 @@ export const loader = async () => {
 		groq`*[_type == "global"]`
 	);
 
-	return { data };
+	return json({
+		data,
+		ENV: {
+			SANITY_PROJECT_ID: process.env.SANITY_PROJECT_ID!,
+			SANITY_DATASET: process.env.SANITY_DATASET!,
+		},
+	});
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
-	const { data } = useLoaderData<typeof loader>();
-	const global = data[0];
+	const { data, ENV } = useLoaderData<typeof loader>();
+	const global = data?.[0];
 
 	return (
 		<html lang="en">
@@ -90,7 +99,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 							))}
 						</ul>
 					</section>
-					<form method="POST">
+					<Form method="post">
 						<label htmlFor="newsletter">{global.footer_newsletter}</label>
 						<input
 							id="newsletter"
@@ -100,7 +109,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 							required
 						/>
 						<button type="submit">Subscribe</button>
-					</form>
+					</Form>
 					<nav aria-label="Footer menu.">
 						{global.footer_menus?.map((menu: any, index: number) => {
 							return (
@@ -131,6 +140,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 					</section>
 				</footer>
 				<ScrollRestoration />
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `window.ENV = ${JSON.stringify(ENV)}`,
+					}}
+				/>
 				<Scripts />
 			</body>
 		</html>
@@ -146,3 +160,9 @@ export const links: LinksFunction = () => [
 	{ rel: "stylesheet", href: reset },
 	{ rel: "stylesheet", href: theme },
 ];
+
+export async function action(data: any) {
+	const formData = await data.request.formData();
+	console.log(formData);
+	return redirect("/");
+}

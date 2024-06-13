@@ -7,11 +7,23 @@ declare global {
 	}
 }
 
-const { SANITY_PROJECT_ID, SANITY_DATASET } =
-	typeof document === "undefined" ? process.env : window.ENV;
+let projectId: string;
+let dataset: string;
 
-export const projectId = SANITY_PROJECT_ID!;
-export const dataset = SANITY_DATASET!;
+if (typeof document === "undefined") {
+	if (typeof process !== "undefined") {
+		projectId = process.env.SANITY_PROJECT_ID!;
+		dataset = process.env.SANITY_DATASET!;
+	} else {
+		projectId = import.meta.env.SANITY_PROJECT_ID;
+		dataset = import.meta.env.SANITY_DATASET;
+	}
+} else {
+	projectId = window.ENV.SANITY_PROJECT_ID;
+	dataset = window.ENV.SANITY_DATASET;
+}
+
+export { dataset, projectId };
 
 if (!projectId) throw new Error("Missing SANITY_PROJECT_ID in .env");
 if (!dataset) throw new Error("Missing SANITY_DATASET in .env");

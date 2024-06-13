@@ -5,6 +5,6 @@ import { projectId, dataset } from "./projectDetails";
 export const client = createClient({
 	projectId,
 	dataset,
-	useCdn: true,
+	useCdn: false,
 	apiVersion: "2023-03-20",
 });

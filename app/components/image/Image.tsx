@@ -1,29 +1,24 @@
 import imageUrlBuilder from "@sanity/image-url";
 import { client } from "~/sanity/client";
-import type { ImageUrlBuilder } from "@sanity/image-url/lib/types/builder";
+import type { SanityImageObjectStub } from "@sanity/asset-utils";
 
 interface Props {
-	image: any;
+	image: {
+		image: SanityImageObjectStub;
+		alt: string;
+	};
 	width?: number;
 }
 
 export const Image = ({ image, width = 960 }: Props) => {
-	let sanityImage: ImageUrlBuilder | undefined;
-	const builder = imageUrlBuilder(client);
+	const sanityUrl = imageUrlBuilder(client)
+		.image(image.image)
+		.width(width)
+		.fit("max")
+		.auto("format")
+		.url();
 
-	try {
-		sanityImage = builder
-			.image(image.image)
-			.width(width)
-			.fit("max")
-			.auto("format");
-	} catch (error) {
-		console.error(error);
-	}
-
-	if (!sanityImage) return;
-
-	return <img src={sanityImage.url()} alt={image.alt || ""} />;
+	return <img src={sanityUrl || ""} alt={image.alt || ""} />;
 };
 
 export default Image;
