@@ -120,7 +120,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 						/>
 						<button type="submit">Subscribe</button>
 					</Form>
-					<nav aria-label="Footer menu.">
+					<nav>
 						{global.footer_menus?.map((menu: any, index: number) => {
 							return (
 								<div key={`footer-menu-${index}`}>
